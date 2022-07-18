@@ -1,6 +1,5 @@
 import {LoadingState} from '@elux/vue-web';
 import {Spin} from 'ant-design-vue';
-import {FunctionalComponent} from 'vue';
 import styles from './index.module.less';
 
 interface Props {
@@ -8,7 +7,8 @@ interface Props {
   loadingState?: LoadingState;
 }
 
-const Component: FunctionalComponent<Props> = function (props) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const Component = function (props: Props) {
   const {loadingState, class: className = ''} = props;
   return (
     <div class={`${styles.root} ${loadingState?.toLowerCase()} ${className}`}>

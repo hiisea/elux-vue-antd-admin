@@ -1225,10 +1225,10 @@
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@elux/app@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmmirror.com/@elux/app/-/app-2.4.0.tgz#3fc397fc09efa62fd2ff2fb5376d071550e85968"
-  integrity sha512-+bPfOJkX7ukmCrdSo6Cv9o9j92aw8Ckp2Ttuixh+yUGKHNmA2GqnB/ePIQ2sVgGU3byfdIcgrw//d2cSSVoTFw==
+"@elux/app@^2.4.1-b.0":
+  version "2.4.1-b.0"
+  resolved "http://localhost:4873/@elux%2fapp/-/app-2.4.1-b.0.tgz#ed398f363040f75d14d3ff06ac3a8f9875c6e956"
+  integrity sha512-4ZwPm8lTwz2jhuPrdVB/XRX9rcAiBUlrF1fkI3GZPOJ2qiOZkXjzL/jK5JAbjq6FVDcUf/u7e4KZQrhmgbKpYw==
   dependencies:
     "@elux/core" "^2.4.0"
     "@elux/route" "^2.4.0"
@@ -1376,24 +1376,24 @@
     stylelint-order "^5.0.0"
     stylelint-prettier "^1.2.0"
 
-"@elux/vue-components@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmmirror.com/@elux/vue-components/-/vue-components-2.4.0.tgz#dd0ec0d51a1b260e5f0ccd7663a14d43f533b673"
-  integrity sha512-s/aWESZmFfuLvRiHoTfpM3yqDxlxVzZe4QCoNq3+44NlJGSz74+2+p3TxKrV7h/wQLcm/KDcxan12zGglg4vAQ==
+"@elux/vue-components@^2.4.1-b.0":
+  version "2.4.1-b.0"
+  resolved "http://localhost:4873/@elux%2fvue-components/-/vue-components-2.4.1-b.0.tgz#6acb36117bd2ed121ae9b833ed38c06f11c48b03"
+  integrity sha512-ZUPNv5afgv+CuPrq1kzz7ygRTGA7oVO3vILhpwr9Wy+qQf8RWQ8VUIw/C4P4v4Cbrdzbgxh7bZE02AjVbPhpyQ==
   dependencies:
     "@elux/core" "^2.4.0"
     "@elux/route" "^2.4.0"
 
-"@elux/vue-web@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.npmmirror.com/@elux/vue-web/-/vue-web-2.4.0.tgz#f494ac6c3525054fe3a195f1a2876c0a6af5eabf"
-  integrity sha512-ggkTYMSFeU5BFcE6BYMqdvGM0DQE/KVmbi/ld/HRWwMwYz+otYPJRXgmEweBZYnHwIN+194onjiA2FU5z/p/XA==
+"@elux/vue-web@^2.4.1-b.0":
+  version "2.4.1-b.0"
+  resolved "http://localhost:4873/@elux%2fvue-web/-/vue-web-2.4.1-b.0.tgz#bd3b32cbeb6b8febb5f39f46b1fecb800a710bf1"
+  integrity sha512-/OPzR2kKFEZqPYjJiCngZnqgXi0/nknRvUpgJis8hGAuyqCPlB8lFufoWBgJcOOSBovzITp/zepbg58+cQ/+0g==
   dependencies:
-    "@elux/app" "^2.4.0"
+    "@elux/app" "^2.4.1-b.0"
     "@elux/core" "^2.4.0"
     "@elux/route" "^2.4.0"
     "@elux/route-browser" "^2.4.0"
-    "@elux/vue-components" "^2.4.0"
+    "@elux/vue-components" "^2.4.1-b.0"
     "@vue/server-renderer" "^3.0.0"
 
 "@eslint/eslintrc@^1.3.0":

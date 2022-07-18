@@ -1,6 +1,6 @@
 import {DownOutlined, UpOutlined} from '@ant-design/icons-vue';
 import {Button, Form} from 'ant-design-vue';
-import {cloneVNode, computed, defineComponent, shallowReactive} from 'vue';
+import {cloneVNode, computed, defineComponent, ref, shallowReactive} from 'vue';
 import {SearchFromItems} from '../../utils/tools';
 import styles from './index.module.less';
 
@@ -17,6 +17,7 @@ interface Props<TFormData = Record<string, any>> {
 
 const Component = defineComponent<Props>({
   name: styles.root,
+  props: ['class', 'items', 'values', 'onSearch', 'fixedFields', 'senior', 'cols', 'expand'] as any,
   emits: ['search'],
   setup(props, {emit}) {
     const cols = computed(() => {
@@ -42,17 +43,19 @@ const Component = defineComponent<Props>({
       const {cols = 4} = props;
       return parseFloat((100 / cols).toFixed(2));
     });
+    const expand = ref(!!props.expand);
+
     const config = computed(() => {
-      const expand = !!props.expand;
       const {senior = 4} = props;
-      const shrink = expand ? props.items.length : senior;
-      return shallowReactive({expand, senior, shrink});
+      const shrink = expand.value ? props.items.length : senior;
+      return shallowReactive({senior, shrink});
     });
-    const formState = computed(() => {
-      return props.items.reduce((obj, item) => {
+    const formStateRef = computed(() => {
+      const data = props.items.reduce((obj, item) => {
         obj[item.name] = props.values[item.name];
         return obj;
       }, {});
+      return shallowReactive(data);
     });
     const onClear = () => {
       emit('search', props.fixedFields || {});
@@ -62,30 +65,37 @@ const Component = defineComponent<Props>({
       emit('search', vals);
     };
     const toggle = () => {
-      config.value.expand = !config.value.expand;
+      expand.value = !expand.value;
     };
 
     return () => {
       const {class: className = '', items, fixedFields} = props;
-      const {expand, shrink, senior} = config.value;
+      const {shrink, senior} = config.value;
+      const formState = formStateRef.value;
       return (
         <div class={styles.root + ' ' + className}>
           <Form layout="inline" onFinish={onFinish} model={formState}>
-            {items.map((item, index) => (
-              <Form.Item
-                name={item.name as string}
-                rules={item.rules}
-                style={{display: index >= shrink ? 'none' : 'flex', width: `${colWidth.value * (item.col || 1)}%`}}
-                key={item.name as string}
-                label={
-                  <span class="label" style={{width: `${cols[item.cite!]}em`}}>
-                    {item.label}
-                  </span>
-                }
-              >
-                {fixedFields && fixedFields[item.name] ? cloneVNode(item.formItem as any, {disabled: true}) : item.formItem}
-              </Form.Item>
-            ))}
+            {items.map((item, index) => {
+              return (
+                <Form.Item
+                  name={item.name}
+                  rules={item.rules}
+                  style={{display: index >= shrink ? 'none' : 'flex', width: `${colWidth.value * (item.col || 1)}%`}}
+                  key={item.name}
+                  label={
+                    <span class="label" style={{width: `${cols.value[item.cite!]}em`}}>
+                      {item.label}
+                    </span>
+                  }
+                >
+                  {cloneVNode(item.formItem, {
+                    disabled: fixedFields && fixedFields[item.name],
+                    value: formState[item.name],
+                    'onUpdate:value': ($event: any) => (formState[item.name] = $event),
+                  })}
+                </Form.Item>
+              );
+            })}
             <div class="form-btns">
               <Button type="primary" htmlType="submit">
                 搜索
@@ -93,7 +103,7 @@ const Component = defineComponent<Props>({
               <Button onClick={onClear}>重置</Button>
               {items.length > senior && (
                 <a class="expand" onClick={toggle}>
-                  {expand ? '收起' : '展开'} {expand ? <UpOutlined /> : <DownOutlined />}
+                  {expand.value ? '收起' : '展开'} {expand.value ? <UpOutlined /> : <DownOutlined />}
                 </a>
               )}
             </div>

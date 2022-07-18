@@ -1,7 +1,20 @@
 import {Rule} from 'ant-design-vue/lib/form';
-import {FormItemProps} from 'ant-design-vue/lib/form/FormItem';
+import {VNode, shallowReactive, watch} from 'vue';
 
 export {message} from 'ant-design-vue';
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function usePropsState<T extends Record<string, any>>(map: () => T) {
+  const limit = shallowReactive({} as T);
+  watch(
+    map,
+    (val) => {
+      Object.assign(limit, val);
+    },
+    {immediate: true}
+  );
+  return limit;
+}
 
 export interface FormDecorator<T = string> {
   dependencies?: T[];
@@ -11,7 +24,7 @@ export interface FormDecorator<T = string> {
 
 export interface SearchFormDecorator<T = string> {
   name: T;
-  formItem: FormItemProps;
+  formItem: VNode;
   label: string;
   rules?: Rule[];
   col?: number;

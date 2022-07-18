@@ -1,6 +1,6 @@
-import {Action, BaseModel, Dispatch, RouteTarget, StoreState, effect, reducer} from '@elux/react-web';
+import {Action, BaseModel, Dispatch, RouteTarget, StoreState, effect, reducer} from '@elux/vue-web';
 import {pathToRegexp} from 'path-to-regexp';
-import {useCallback, useMemo, useState} from 'react';
+import {shallowRef, watch} from 'vue';
 import {useRouter} from '@/Global';
 import {BaseApi, BaseListSearch, DefineResource} from './base';
 import {DialogPageClassname} from './const';
@@ -70,12 +70,8 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
   }
 
   @reducer
-  public putList(
-    listSearch: TDefineResource['ListSearch'],
-    list: TDefineResource['ListItem'][],
-    listSummary: TDefineResource['ListSummary']
-  ): TDefineResource['ModuleState'] {
-    return {...this.state, listSearch, list, listSummary};
+  public putList(listSearch: TDefineResource['ListSearch'], list: TDefineResource['ListItem'][], listSummary: TDefineResource['ListSummary']): void {
+    Object.assign(this.state, {listSearch, list, listSummary});
   }
 
   @effect('this.listLoading')
@@ -86,8 +82,8 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
   }
 
   @reducer
-  public putCurrentItem(itemId = '', itemDetail: TDefineResource['ItemDetail']): TDefineResource['ModuleState'] {
-    return {...this.state, itemId, itemDetail};
+  public putCurrentItem(itemId = '', itemDetail: TDefineResource['ItemDetail']): void {
+    Object.assign(this.state, {itemId, itemDetail});
   }
 
   @effect()
@@ -128,111 +124,95 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useSearch<TFormData>(listPathname: string, defaultListSearch: Partial<TFormData>) {
+export function useSearch<TFormData>(props: {listPathname: string}, defaultListSearch: Partial<TFormData>) {
   const router = useRouter();
-  const onSearch = useCallback(
-    (values: Partial<TFormData>) => {
-      const searchQuery = excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1});
-      router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
-    },
-    [defaultListSearch, listPathname, router]
-  );
+  const onSearch = (values: Partial<TFormData>) => {
+    const searchQuery = excludeDefaultParams(defaultListSearch, {...values, pageCurrent: 1});
+    router.push({pathname: props.listPathname, searchQuery, state: router.location.state}, 'page');
+  };
 
   return {onSearch};
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useShowDetail(prefixPathname: string) {
+export function useShowDetail(props: {prefixPathname: string}) {
   const router = useRouter();
-  const onShowDetail = useCallback(
-    (id: string) => {
-      router.push({url: `${prefixPathname}/item/detail/${id}`, classname: DialogPageClassname}, 'window');
-    },
-    [prefixPathname, router]
-  );
-  const onShowEditor = useCallback(
-    (id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
-      router.push({url: `${prefixPathname}/item/edit/${id}`, classname: DialogPageClassname, state: {onSubmit}}, 'window');
-    },
-    [prefixPathname, router]
-  );
+  const onShowDetail = (id: string) => {
+    router.push({url: `${props.prefixPathname}/item/detail/${id}`, classname: DialogPageClassname}, 'window');
+  };
+  const onShowEditor = (id: string, onSubmit: (id: string, data: Record<string, any>) => Promise<void>) => {
+    router.push({url: `${props.prefixPathname}/item/edit/${id}`, classname: DialogPageClassname, state: {onSubmit}}, 'window');
+  };
 
   return {onShowDetail, onShowEditor};
 }
 
 //eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useAlter<T>(
-  dispatch: Dispatch,
+  props: {
+    dispatch: Dispatch;
+    selectedRows?: T[];
+  },
   actions: {
     deleteItems?(id: string | string[]): Action;
     alterItems?(id: string | string[], data: Record<string, any>): Action;
     updateItem?(id: string, data: Record<string, any>): Action;
     createItem?(data: Record<string, any>): Action;
-  },
-  propsSelectedRows?: T[]
+  }
 ) {
-  const [selectedRows, setSelectedRows] = useState(propsSelectedRows);
-
-  useMemo(() => {
-    setSelectedRows(propsSelectedRows);
-  }, [propsSelectedRows]);
-
-  const deleteItems = useCallback(
-    async (id: string | string[]) => {
-      await dispatch(actions.deleteItems!(id));
-      setSelectedRows([]);
-    },
-    [actions, dispatch]
+  const selectedRows = shallowRef(props.selectedRows);
+  watch(
+    () => props.selectedRows,
+    (val) => (selectedRows.value = val)
   );
 
-  const alterItems = useCallback(
-    async (id: string | string[], data: Record<string, any>) => {
-      await dispatch(actions.alterItems!(id, data));
-      setSelectedRows([]);
-    },
-    [actions, dispatch]
-  );
+  const deleteItems = async (id: string | string[]) => {
+    await props.dispatch(actions.deleteItems!(id));
+    selectedRows.value = [];
+  };
 
-  const updateItem = useCallback(
-    async (id: string, data: Record<string, any>) => {
-      if (id) {
-        await dispatch(actions.updateItem!(id, data));
-      } else {
-        await dispatch(actions.createItem!(data));
-      }
+  const alterItems = async (id: string | string[], data: Record<string, any>) => {
+    await props.dispatch(actions.alterItems!(id, data));
+    selectedRows.value = [];
+  };
 
-      setSelectedRows([]);
-    },
-    [actions, dispatch]
-  );
+  const updateItem = async (id: string, data: Record<string, any>) => {
+    if (id) {
+      await props.dispatch(actions.updateItem!(id, data));
+    } else {
+      await props.dispatch(actions.createItem!(data));
+    }
+    selectedRows.value = [];
+  };
 
-  return {selectedRows, setSelectedRows, deleteItems, alterItems, updateItem};
+  return {selectedRows, deleteItems, alterItems, updateItem};
 }
 
 export function useSingleWindow(): RouteTarget {
   const router = useRouter();
   return router.location.classname.startsWith('_') ? 'page' : 'window';
 }
-
-//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useTableChange<T extends BaseListSearch>(listPathname: string, defaultListSearch: T, listSearch?: T) {
-  const sorterStr = [listSearch?.sorterField, listSearch?.sorterOrder].join('');
+export function useTableSize(): 'middle' | 'large' {
   const router = useRouter();
-  return useCallback(
-    (pagination: any, filter: any, _sorter: any) => {
-      const sorter = _sorter as {field: string; order: 'ascend' | 'descend' | undefined};
-      const {current, pageSize} = pagination as {current: number; pageSize: number};
-      const sorterField = (sorter.order && sorter.field) || undefined;
-      const sorterOrder = sorter.order || undefined;
-      const currentSorter = [sorterField, sorterOrder].join('');
-      const pageCurrent = currentSorter !== sorterStr ? 1 : current;
+  return router.location.classname.startsWith('_') ? 'middle' : 'large';
+}
+//eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function useTableChange<T extends BaseListSearch>(props: {listSearch?: T}, listPathname: string, defaultListSearch: T) {
+  const router = useRouter();
+  return (pagination: any, filter: any, _sorter: any) => {
+    const {listSearch} = props;
+    const sorterStr = [listSearch?.sorterField, listSearch?.sorterOrder].join('');
+    const sorter = _sorter as {field: string; order: 'ascend' | 'descend' | undefined};
+    const {current, pageSize} = pagination as {current: number; pageSize: number};
+    const sorterField = (sorter.order && sorter.field) || undefined;
+    const sorterOrder = sorter.order || undefined;
+    const currentSorter = [sorterField, sorterOrder].join('');
+    const pageCurrent = currentSorter !== sorterStr ? 1 : current;
 
-      const searchQuery = excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder});
+    const searchQuery = excludeDefaultParams(defaultListSearch, {...listSearch, pageCurrent, pageSize, sorterField, sorterOrder});
 
-      router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
-    },
-    [defaultListSearch, listSearch, listPathname, sorterStr, router]
-  );
+    router.push({pathname: listPathname, searchQuery, state: router.location.state}, 'page');
+  };
 }
 
 //也可以使用回调到方法创建和编辑，但使用await 路由跳转更简单
@@ -241,26 +221,23 @@ export function useTableChange<T extends BaseListSearch>(listPathname: string, d
 //   dispatch: Dispatch,
 //   actions: {updateItem?(id: string, data: Record<string, any>): Action; createItem?(data: Record<string, any>): Action}
 // ) {
-//   const [loading, setLoading] = useState(false);
+//   const loading = shallowRef(false);
 //   const router = useRouter();
-//   const onFinish = useCallback(
-//     (values: Record<string, any>) => {
-//       const {onSubmit} = (router.location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
-//       let result: Promise<void>;
-//       setLoading(true);
-//       if (onSubmit) {
-//         result = onSubmit(id, values);
+//   const onFinish = (values: Record<string, any>) => {
+//     const {onSubmit} = (router.location.state || {}) as {onSubmit?: (id: string, data: Record<string, any>) => Promise<void>};
+//     let result: Promise<void>;
+//     loading.value = true;
+//     if (onSubmit) {
+//       result = onSubmit(id, values);
+//     } else {
+//       if (id) {
+//         result = dispatch(actions.updateItem!(id, values)) as Promise<void>;
 //       } else {
-//         if (id) {
-//           result = dispatch(actions.updateItem!(id, values)) as Promise<void>;
-//         } else {
-//           result = dispatch(actions.createItem!(values)) as Promise<void>;
-//         }
+//         result = dispatch(actions.createItem!(values)) as Promise<void>;
 //       }
-//       result.finally(() => setLoading(false)).then(() => router.back(1, 'window'));
-//     },
-//     [router, id, dispatch, actions]
-//   );
+//     }
+//     result.finally(() => (loading.value = false)).then(() => router.back(1, 'window'));
+//   };
 
 //   return {loading, onFinish};
 // }

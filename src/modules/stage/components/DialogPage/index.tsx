@@ -22,7 +22,8 @@ const Component = defineComponent<Props>({
   props: ['class', 'title', 'subject', 'showBrand', 'showControls', 'maskClosable', 'mask', 'size', 'backOverflowRedirect'] as any,
   setup(props, context) {
     const controls = computed(() => {
-      return props.showControls ? (
+      const showControls = props.showControls !== undefined ? props.showControls : !props.showBrand;
+      return showControls ? (
         <div class="control">
           <Tooltip title="后退">
             <Link to={1} action="back" target="page" overflowRedirect={props.backOverflowRedirect}>

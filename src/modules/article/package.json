@@ -1,0 +1,16 @@
+{
+  "name": "@elux-admin-antd/article",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "peerDependencies": {
+    "@elux-admin-antd/stage": "*",
+    "@ant-design/icons-vue": "*",
+    "@elux/vue-web": "*",
+    "path-to-regexp": "*",
+    "query-string": "*",
+    "dayjs": "*",
+    "ant-design-vue": "*",
+    "vue": "*",
+    "axios": "*"
+  }
+}

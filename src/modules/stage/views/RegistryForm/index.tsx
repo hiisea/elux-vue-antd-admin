@@ -1,8 +1,8 @@
 import {AliwangwangFilled, LockOutlined, UserOutlined} from '@ant-design/icons-vue';
-import {Link} from '@elux/vue-web';
+import {Link, connectStore} from '@elux/vue-web';
 import {Button, Checkbox, Form, FormInstance, Input} from 'ant-design-vue';
-import {computed, defineComponent, reactive, ref} from 'vue';
-import {GetActions, useStore} from '@/Global';
+import {defineComponent, reactive, ref} from 'vue';
+import {APPState, GetActions} from '@/Global';
 import DialogPage from '../../components/DialogPage';
 import {RegisterParams} from '../../entity';
 import {LoginUrl} from '../../utils/const';
@@ -23,10 +23,21 @@ const agreementChecked = (rule: any, value: string) => {
 
 const {stage: stageActions} = GetActions('stage');
 
+interface StoreProps {
+  fromUrl?: string;
+}
+
+function mapStateToProps(appState: APPState): StoreProps {
+  const {fromUrl} = appState.stage!;
+  return {
+    fromUrl,
+  };
+}
+
 const Component = defineComponent({
   name: styles.root,
   setup() {
-    const store = useStore();
+    const storeProps = connectStore(mapStateToProps);
     const formRef = ref<FormInstance>();
     const formState = reactive<HFormData>({
       username: '',
@@ -47,11 +58,11 @@ const Component = defineComponent({
       confirm: {rules: [{required: true, message: '请再次输入密码!', whitespace: true}, {validator: confirmValidator}]},
     });
     const onSubmit = (values: HFormData) => {
-      store.dispatch(stageActions.registry(values));
+      storeProps.dispatch(stageActions.registry(values));
     };
-    const fromUrl = computed(() => store.state.stage!.fromUrl);
 
     return () => {
+      const {fromUrl} = storeProps;
       return (
         <DialogPage title="用户注册" subject="用户注册" maskClosable={false} showBrand>
           <div class={`${styles.root} g-dialog-content`}>
@@ -98,7 +109,7 @@ const Component = defineComponent({
             </Form>
             <div class="footer">
               <AliwangwangFilled /> <span>已注册用户？</span>
-              <Link to={LoginUrl(fromUrl.value)} action="relaunch" target="window">
+              <Link to={LoginUrl(fromUrl)} action="relaunch" target="window">
                 登录
               </Link>
             </div>

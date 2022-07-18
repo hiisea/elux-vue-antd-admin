@@ -20,6 +20,7 @@ module.exports = {
       StaticPrefix: apiHosts[APP_ENV],
     },
     webpackConfigTransform: (config) => {
+      //此处可以自定义webpack配置
       //console.log(config.module.rules[0]);
       return config;
     },

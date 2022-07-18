@@ -1,10 +1,10 @@
 import {Link} from '@elux/vue-web';
 import {Button} from 'ant-design-vue';
-import {FunctionalComponent} from 'vue';
 import DialogPage from '../../components/DialogPage';
 import styles from './index.module.less';
 
-const Component: FunctionalComponent = () => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const Component = () => {
   return (
     <DialogPage title="用户协议" subject="用户协议" maskClosable={false} showBrand>
       <div class={`${styles.root} g-dialog-content`}>

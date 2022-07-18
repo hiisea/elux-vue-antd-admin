@@ -10,10 +10,10 @@ import {parse, stringify} from 'query-string';
 export const ModuleGetter = {
   //通常stage为根模块，使用同步加载，如果根模块要用别的名字，需要同时在以下setConfig中设置
   stage: () => stage,
-  // admin: () => import('@elux-admin-antd/admin'),
-  // dashboard: () => import('@elux-admin-antd/dashboard'),
-  // member: () => import('@elux-admin-antd/member'),
-  // article: () => import('@elux-admin-antd/article'),
+  admin: () => import('@elux-admin-antd/admin'),
+  dashboard: () => import('@elux-admin-antd/dashboard'),
+  member: () => import('@elux-admin-antd/member'),
+  article: () => import('@elux-admin-antd/article'),
 };
 
 //Elux全局设置，参见 https://eluxjs.com/api/react-web.setconfig.html

@@ -1,8 +1,8 @@
 import {AlipayCircleOutlined, AliwangwangFilled, DingtalkCircleFilled, LockOutlined, MobileFilled, UserOutlined} from '@ant-design/icons-vue';
-import {Link} from '@elux/vue-web';
+import {Link, connectStore} from '@elux/vue-web';
 import {Button, Checkbox, Form, FormInstance, Input} from 'ant-design-vue';
-import {computed, defineComponent, reactive, ref} from 'vue';
-import {GetActions, useStore} from '@/Global';
+import {defineComponent, reactive, ref} from 'vue';
+import {APPState, GetActions} from '@/Global';
 import DialogPage from '../../components/DialogPage';
 import {LoginParams} from '../../entity';
 import {getFormDecorators} from '../../utils/tools';
@@ -12,10 +12,21 @@ type HFormData = Required<LoginParams>;
 
 const {stage: stageActions} = GetActions('stage');
 
+interface StoreProps {
+  fromUrl?: string;
+}
+
+function mapStateToProps(appState: APPState): StoreProps {
+  const {fromUrl} = appState.stage!;
+  return {
+    fromUrl,
+  };
+}
+
 const Component = defineComponent({
   name: styles.root,
   setup() {
-    const store = useStore();
+    const storeProps = connectStore(mapStateToProps);
     const formRef = ref<FormInstance>();
     const formState = reactive<HFormData>({
       username: 'admin',
@@ -31,17 +42,17 @@ const Component = defineComponent({
       keep: {valuePropName: 'checked'},
     });
     const onSubmit = (values: HFormData) => {
-      const result = store.dispatch(stageActions.login(values)) as Promise<void>;
+      const result = storeProps.dispatch(stageActions.login(values)) as Promise<void>;
       result.catch(({message}) => {
         //console.log(message);
       });
     };
     const onCancel = () => {
-      store.dispatch(stageActions.cancelLogin());
+      storeProps.dispatch(stageActions.cancelLogin());
     };
-    const fromUrl = computed(() => store.state.stage!.fromUrl);
 
     return () => {
+      const {fromUrl} = storeProps;
       return (
         <DialogPage title="用户登录" subject="用户登录" maskClosable={false} showBrand>
           <div class={`${styles.root} g-dialog-content`}>
@@ -56,7 +67,7 @@ const Component = defineComponent({
                 <Form.Item {...fromDecorators.keep} noStyle>
                   <Checkbox v-model:checked={formState.keep}>记住登录</Checkbox>
                 </Form.Item>
-                <Link class="btn-forgot" to={`/stage/forgetPassword?from=${fromUrl.value}`} action="push" target="page">
+                <Link class="btn-forgot" to={`/stage/forgetPassword?from=${fromUrl}`} action="push" target="page">
                   忘记密码？
                 </Link>
               </Form.Item>
@@ -72,7 +83,7 @@ const Component = defineComponent({
               </Form.Item>
             </Form>
             <div class="footer">
-              <Link to={`/stage/registry?from=${fromUrl.value}`} action="push" target="page">
+              <Link to={`/stage/registry?from=${fromUrl}`} action="push" target="page">
                 <AliwangwangFilled /> <span>注册新用户</span>
               </Link>
               <div class="other-login">

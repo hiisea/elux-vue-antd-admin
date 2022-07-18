@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
-import {FunctionalComponent} from 'vue';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 interface Props {
   date: string | number;
 }
-const Component: FunctionalComponent<Props> = ({date}) => {
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const Component = ({date}: Props) => {
   return <>{date ? dayjs(date).format(dateFormat) : ''}</>;
 };
 

@@ -39,16 +39,35 @@ interface Props<T = Record<string, any>> extends TableProps<T> {
 
 const Component = defineComponent<Props>({
   name: styles.root,
-  setup(props) {
+  props: [
+    'class',
+    'columns',
+    'commonActions',
+    'batchActions',
+    'listSummary',
+    'listSearch',
+    'selectedRowKeys',
+    'selectedRows',
+    'selection',
+    'dataSource',
+    'onChange',
+    'rowKey',
+    'loading',
+    'size',
+    'bordered',
+    'locale',
+    'scroll',
+  ] as any,
+  setup(props: Props) {
     const router = useRouter();
-    const limit = shallowReactive({limitMax: -1, limitMin: -1, selectedLimit: [-1, -1]});
+    const limit = shallowReactive({limitMax: -1, limitMin: -1, limitArr: [-1, -1]});
     watch(
       () => {
         const {limit = 0} = props.selection || {};
-        const selectLimit = typeof limit === 'number' ? [limit] : limit;
-        const limitMax = selectLimit[1] !== undefined ? selectLimit[1] : selectLimit[0];
-        const limitMin = selectLimit[1] !== undefined ? selectLimit[0] : 0;
-        return {limitMax, limitMin, selectLimit};
+        const limitArr = typeof limit === 'number' ? [limit] : limit;
+        const limitMax = limitArr[1] !== undefined ? limitArr[1] : limitArr[0];
+        const limitMin = limitArr[1] !== undefined ? limitArr[0] : 0;
+        return {limitMax, limitMin, limitArr};
       },
       (val) => {
         Object.assign(limit, val);
@@ -78,7 +97,7 @@ const Component = defineComponent<Props>({
     }>({keys: [], rows: [], maps: {}});
     watch(
       () => {
-        const {selectedRowKeys, selectedRows, rowKey} = props;
+        const {selectedRowKeys, selectedRows, rowKey = 'id'} = props;
         const keys = selectedRowKeys || (selectedRows || []).map((item) => item[rowKey as string] as Key);
         const rows = selectedRows || (selectedRowKeys || []).map((key) => ({[rowKey as string]: key} as Partial<Record<string, any>>));
         const maps = rows.reduce((data, cur) => {
@@ -94,6 +113,11 @@ const Component = defineComponent<Props>({
     );
     const updateSelected = (val: {keys: Key[]; rows: Partial<Record<string, any>>[]; maps: Partial<Record<string, any>>}) => {
       selected.value = val;
+      if (val.keys.length === 0) {
+        closeReviewMode();
+      }
+      const onChange = props.selection?.onChange;
+      onChange && onChange(val.keys, val.rows, val.maps);
     };
     const clearSelected = () => updateSelected({keys: [], rows: [], maps: {}});
     const onSelectedSubmit = () => {
@@ -180,8 +204,7 @@ const Component = defineComponent<Props>({
             overlay={
               <Menu onClick={batchMenuClickHandler}>
                 {batchActions.actions.map(({key, label, icon}) => (
-                  <Menu.Item key={key}>
-                    {icon}
+                  <Menu.Item key={key} icon={icon}>
                     {label}
                   </Menu.Item>
                 ))}
@@ -232,7 +255,7 @@ const Component = defineComponent<Props>({
 
     const headArea = computed(() => {
       const {commonActions} = props;
-      const {limitMax, limitMin, selectedLimit} = limit;
+      const {limitMax, limitMin, limitArr} = limit;
       if (!commonActions && !batchMenu.value && limit.limitMax < 0) {
         return;
       }
@@ -240,10 +263,10 @@ const Component = defineComponent<Props>({
         <div class="hd">
           {limitMax > -1 && !batchMenu.value && (
             <Button onClick={onSelectedSubmit} disabled={!!limitMin && selected.value.keys.length < limitMin} type="primary" icon={<CheckOutlined />}>
-              提交<span class="tip">{`(可选${selectedLimit.map((n) => (n === 0 ? '多' : n)).join('-')}项)`}</span>
+              提交<span class="tip">{`(可选${limitArr.map((n) => (n === 0 ? '多' : n)).join('-')}项)`}</span>
             </Button>
           )}
-          {selected.value.keys.length === 0 ? commonActions : batchMenu}
+          {selected.value.keys.length === 0 ? commonActions : batchMenu.value}
           {reviewMode.value && (
             <Button onClick={closeReviewMode} type="dashed" icon={<LeftOutlined />}>
               返回列表
@@ -278,15 +301,16 @@ const Component = defineComponent<Props>({
     });
 
     return () => {
-      const {class: className = '', dataSource, rowKey, loading, size, bordered, locale, scroll} = props;
+      const {class: className = '', dataSource, onChange, rowKey = 'id', loading, size, bordered, locale, scroll} = props;
       return (
         <div class={styles.root + ' ' + className}>
-          {headArea}
+          {headArea.value}
           <Table
             columns={columnList.value}
             pagination={reviewMode.value ? false : pagination.value}
             rowSelection={rowSelection.value}
             dataSource={reviewMode.value ? selected.value.rows : dataSource}
+            onChange={onChange}
             rowKey={rowKey}
             loading={loading}
             size={size}

@@ -1,12 +1,12 @@
 import {Link} from '@elux/vue-web';
 import {Button, Result} from 'ant-design-vue';
-import {FunctionalComponent} from 'vue';
 
 export interface Props {
   message?: string;
 }
 
-const Component: FunctionalComponent<Props> = function (props) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const Component = function (props: Props) {
   const {message = '(404) 没有找到相关内容!'} = props;
   return (
     <Result

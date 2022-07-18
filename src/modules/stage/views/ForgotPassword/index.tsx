@@ -1,8 +1,8 @@
 import {LockOutlined, MobileOutlined, NumberOutlined} from '@ant-design/icons-vue';
-import {Link} from '@elux/vue-web';
+import {Link, connectStore} from '@elux/vue-web';
 import {Button, Form, FormInstance, Input} from 'ant-design-vue';
 import {defineComponent, onBeforeUnmount, reactive, ref} from 'vue';
-import {GetActions, useStore} from '@/Global';
+import {GetActions} from '@/Global';
 import DialogPage from '../../components/DialogPage';
 import {ResetPasswordParams} from '../../entity';
 import {getFormDecorators} from '../../utils/tools';
@@ -17,7 +17,7 @@ const {stage: stageActions} = GetActions('stage');
 const Component = defineComponent({
   name: styles.root,
   setup() {
-    const store = useStore();
+    const storeProps = connectStore();
     const formRef = ref<FormInstance>();
     const formState = reactive<HFormData>({
       phone: '',
@@ -39,13 +39,13 @@ const Component = defineComponent({
       if (!phone) {
         formRef.value?.validateFields('phone');
       } else {
-        await store.dispatch(stageActions.sendCaptcha({phone}));
+        await storeProps.dispatch(stageActions.sendCaptcha({phone}));
         countDown.value = 60;
         setTimeout(checkCountDown, 1000);
       }
     };
     const onSubmit = (values: HFormData) => {
-      store.dispatch(stageActions.resetPassword(values));
+      storeProps.dispatch(stageActions.resetPassword(values));
     };
     const confirmValidator = (rules: any, value: string) => {
       if (!value || formState.password === value) {

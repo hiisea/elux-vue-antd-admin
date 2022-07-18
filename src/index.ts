@@ -5,6 +5,7 @@ import {createApp} from '@elux/vue-web';
 import {appConfig} from './Project';
 
 createApp(appConfig)
+  //.use() //可以用vue.use
   .render()
   .then(() => {
     const initLoading = document.getElementById('root-loading');
