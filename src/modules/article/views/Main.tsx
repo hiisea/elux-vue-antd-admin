@@ -3,6 +3,9 @@ import {Switch, connectStore, exportView} from '@elux/vue-web';
 import {defineComponent} from 'vue';
 import {APPState} from '@/Global';
 import {CurRender, CurView, ItemDetail} from '../entity';
+import Detail from './Detail';
+import Edit from './Edit';
+import Index from './Index';
 import Maintain from './Maintain';
 
 export interface StoreProps {
@@ -22,7 +25,14 @@ const Component = defineComponent({
 
     return () => {
       const {curView, curRender, itemDetail, dispatch} = storeProps;
-      return <Switch elseView={<ErrorPage />}>{curView === 'list' && curRender === 'maintain' && <Maintain />}</Switch>;
+      return (
+        <Switch elseView={<ErrorPage />}>
+          {curView === 'list' && curRender === 'maintain' && <Maintain />}
+          {curView === 'list' && curRender === 'index' && <Index />}
+          {curView === 'item' && curRender === 'detail' && <Detail itemDetail={itemDetail} />}
+          {curView === 'item' && curRender === 'edit' && <Edit itemDetail={itemDetail} dispatch={dispatch} />}
+        </Switch>
+      );
     };
   },
 });

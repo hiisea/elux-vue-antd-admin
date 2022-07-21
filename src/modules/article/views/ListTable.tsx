@@ -1,12 +1,13 @@
 import MTable, {MBatchActions, MColumns, MSelection} from '@elux-admin-antd/stage/components/MTable';
 import {DialogPageClassname} from '@elux-admin-antd/stage/utils/const';
 import {useSingleWindow, useTableChange, useTableSize} from '@elux-admin-antd/stage/utils/resource';
+import {splitIdName} from '@elux-admin-antd/stage/utils/tools';
 import {Link, LoadingState, connectStore} from '@elux/vue-web';
 import {Tooltip} from 'ant-design-vue';
 import {ColumnProps} from 'ant-design-vue/lib/table';
 import {VNode, computed, defineComponent} from 'vue';
 import {APPState} from '@/Global';
-import {DGender, DRole, DStatus, ListItem, ListSearch, ListSummary, defaultListSearch} from '../entity';
+import {DStatus, ListItem, ListSearch, ListSummary, Status, defaultListSearch} from '../entity';
 
 interface StoreProps {
   listSearch: ListSearch;
@@ -26,7 +27,7 @@ interface Props {
 }
 
 const mapStateToProps: (state: APPState) => StoreProps = (state) => {
-  const {listSearch, list, listSummary, listLoading} = state.member!;
+  const {listSearch, list, listSummary, listLoading} = state.article!;
   return {listSearch, list, listSummary, listLoading};
 };
 
@@ -41,58 +42,48 @@ const Component = defineComponent<Props>({
       const {actionColumns, mergeColumns} = props;
       const cols: MColumns<ListItem>[] = [
         {
-          title: '用户名',
-          dataIndex: 'name',
-          width: '10%',
-          sorter: true,
-          customRender: ({value, record}: {value: string; record: {id: string}}) => (
-            <Link to={`/admin/member/item/detail/${record.id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
-              {value}
-            </Link>
-          ),
-        },
-        {
-          title: '呢称',
-          dataIndex: 'nickname',
-          width: '10%',
-        },
-        {
-          title: '角色',
-          dataIndex: 'role',
-          width: '10%',
-          customRender: ({value}: {value: string}) => DRole.valueToLabel[value],
-        },
-        {
-          title: '性别',
-          dataIndex: 'gender',
-          align: 'center',
-          width: '100px',
-          customRender: ({value}: {value: string}) => DGender.valueToLabel[value],
-        },
-        {
-          title: '文章数',
-          dataIndex: 'articles',
-          align: 'center',
-          sorter: true,
-          width: '120px',
-          customRender: ({value, record}: {value: string; record: {id: string}}) => (
-            <Link to={`/admin/article/list/index?author=${record.id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
-              {value}
-            </Link>
-          ),
-        },
-        {
-          title: 'Email',
-          dataIndex: 'email',
+          title: '标题',
+          dataIndex: 'title',
           ellipsis: {showTitle: false},
-          customRender: ({value}: {value: string}) => (
+          customRender: ({value, record}: {value: string; record: {id: string}}) => (
             <Tooltip placement="topLeft" title={value}>
-              {value}
+              <Link to={`/admin/article/item/detail/${record.id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
+                {value}
+              </Link>
             </Tooltip>
           ),
         },
         {
-          title: '注册时间',
+          title: '作者',
+          dataIndex: 'author',
+          width: '10%',
+          sorter: true,
+          customRender: ({value}: {value: string}) => {
+            const {id, name} = splitIdName(value);
+            return (
+              <Link to={`/admin/member/item/detail/${id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
+                {name}
+              </Link>
+            );
+          },
+        },
+        {
+          title: '责任编辑',
+          dataIndex: 'editors',
+          width: '20%',
+          className: 'g-actions',
+          customRender: ({value}: {value: string[]}) =>
+            value.map((editor) => {
+              const {id, name} = splitIdName(editor);
+              return (
+                <Link key={id} to={`/admin/member/item/detail/${id}`} action="push" target={singleWindow} cname={DialogPageClassname}>
+                  {name}
+                </Link>
+              );
+            }),
+        },
+        {
+          title: '创建时间',
           dataIndex: 'createdTime',
           width: '200px',
           sorter: true,
@@ -102,9 +93,14 @@ const Component = defineComponent<Props>({
           title: '状态',
           dataIndex: 'status',
           width: '100px',
-          customRender: ({value}: {value: string}) => <span class={`g-${value}`}>{DStatus.valueToLabel[value]}</span>,
+          customRender: ({value}: {value: string}) => (
+            <span class={`g-${value === Status.审核拒绝 ? 'disable' : value === Status.审核通过 ? 'enable' : ''}`}>
+              {DStatus.valueToLabel[value]}
+            </span>
+          ),
         },
       ];
+
       if (actionColumns) {
         cols.push(actionColumns);
       }

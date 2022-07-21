@@ -54,13 +54,12 @@
     "@ant-design/icons-vue"
   ],
   "dependencies": {
-    "@elux/vue-web": "^2.4.1-b.0",
+    "@elux/vue-web": "^2.5.1",
     "vue": "^3.2.22",
     "axios": "^0.21.1",
     "query-string": "^7.1.1",
     "path-to-regexp": "^6.2.0",
-    "ant-design-vue": "^3.2.10",
-    "lodash": "^4.17.21"
+    "ant-design-vue": "^3.2.10"
   },
   "devDependencies": {
     "@elux/cli": "^2.5.2",

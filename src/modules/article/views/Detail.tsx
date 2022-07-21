@@ -1,9 +1,8 @@
 import DateTime from '@elux-admin-antd/stage/components/DateTime';
 import DialogPage from '@elux-admin-antd/stage/components/DialogPage';
 import {splitIdName} from '@elux-admin-antd/stage/utils/tools';
-import {Link, exportView} from '@elux/react-web';
-import {Descriptions, Skeleton} from 'antd';
-import {FC, memo} from 'react';
+import {Link} from '@elux/vue-web';
+import {Descriptions, Skeleton} from 'ant-design-vue';
 import {DStatus, ItemDetail} from '../entity';
 
 const DescriptionsItem = Descriptions.Item;
@@ -12,12 +11,13 @@ interface Props {
   itemDetail?: ItemDetail;
 }
 
-const Component: FC<Props> = ({itemDetail}) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const Component = ({itemDetail}: Props) => {
   let id = '',
     name = '';
   return (
     <DialogPage title="文章详情" subject="文章详情" mask>
-      <div className="g-dialog-content" style={{width: 800}}>
+      <div class="g-dialog-content" style={{width: '800px'}}>
         {itemDetail ? (
           <Descriptions bordered column={2}>
             <DescriptionsItem label="标题" span={2}>
@@ -31,7 +31,7 @@ const Component: FC<Props> = ({itemDetail}) => {
               )}
             </DescriptionsItem>
             <DescriptionsItem label="责任编辑">
-              <div className="g-actions">
+              <div class="g-actions">
                 {itemDetail.editors.map(
                   (editor) =>
                     ({id, name} = splitIdName(editor)) && (
@@ -61,4 +61,4 @@ const Component: FC<Props> = ({itemDetail}) => {
   );
 };
 
-export default exportView(memo(Component));
+export default Component;

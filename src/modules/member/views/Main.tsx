@@ -6,6 +6,7 @@ import {CurRender, CurView, ItemDetail} from '../entity';
 import Detail from './Detail';
 import Edit from './Edit';
 import Maintain from './Maintain';
+import Selector from './Selector';
 
 export interface StoreProps {
   curView?: CurView;
@@ -27,6 +28,7 @@ const Component = defineComponent({
       return (
         <Switch elseView={<ErrorPage />}>
           {curView === 'list' && curRender === 'maintain' && <Maintain />}
+          {curView === 'list' && curRender === 'selector' && <Selector />}
           {curView === 'item' && curRender === 'detail' && <Detail itemDetail={itemDetail} />}
           {curView === 'item' && curRender === 'edit' && <Edit itemDetail={itemDetail} dispatch={dispatch} />}
         </Switch>

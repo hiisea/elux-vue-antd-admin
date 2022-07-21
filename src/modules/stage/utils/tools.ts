@@ -17,6 +17,7 @@ export function usePropsState<T extends Record<string, any>>(map: () => T) {
 }
 
 export interface FormDecorator<T = string> {
+  label?: string;
   dependencies?: T[];
   rules?: Rule[];
   valuePropName?: string;

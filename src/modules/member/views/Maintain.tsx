@@ -74,7 +74,7 @@ const Component = defineComponent({
       const {prefixPathname, curRender, listSearch} = storeProps;
       return (
         <div class="g-page-content">
-          <DocumentHead title="用户列表" />
+          <DocumentHead title="用户管理" />
           <div>
             <SearchForm listSearch={listSearch} listPathname={`${prefixPathname}/list/${curRender}`} />
             <ListTable

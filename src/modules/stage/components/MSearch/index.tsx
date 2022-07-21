@@ -89,7 +89,7 @@ const Component = defineComponent<Props>({
                   }
                 >
                   {cloneVNode(item.formItem, {
-                    disabled: fixedFields && fixedFields[item.name],
+                    disabled: !!(fixedFields && fixedFields[item.name]),
                     value: formState[item.name],
                     'onUpdate:value': ($event: any) => (formState[item.name] = $event),
                   })}

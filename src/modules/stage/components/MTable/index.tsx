@@ -128,7 +128,7 @@ const Component = defineComponent<Props>({
 
     const rowSelection = computed(() => {
       const {limitMax} = limit;
-      const {autoSubmit} = props.selection || {};
+      const {autoSubmit = true} = props.selection || {};
       if (limitMax > -1) {
         return {
           preserveSelectedRowKeys: true,

@@ -18,12 +18,12 @@ export const formItemLayout = {
 };
 
 const fromDecorators = getFormDecorators<UpdateItem>({
-  name: {rules: [{required: true, message: '请输入用户名'}]},
-  nickname: {rules: [{required: true, message: '请输入呢称'}]},
-  role: {rules: [{required: true, message: '请选择角色'}]},
-  gender: {rules: [{required: true, message: '请选择性别'}]},
-  email: {rules: [{required: true, type: 'email', message: '请输入Email'}]},
-  status: {rules: [{required: true, message: '请选择用户状态'}]},
+  name: {label: '用户名', rules: [{required: true, message: '请输入用户名'}]},
+  nickname: {label: '呢称', rules: [{required: true, message: '请输入呢称'}]},
+  role: {label: '角色', rules: [{required: true, message: '请选择角色'}]},
+  gender: {label: '性别', rules: [{required: true, message: '请选择性别'}]},
+  email: {label: 'Email', rules: [{required: true, type: 'email', message: '请输入Email'}]},
+  status: {label: '状态', rules: [{required: true, message: '请选择用户状态'}]},
 });
 
 interface Props {
@@ -60,25 +60,24 @@ const Component = defineComponent<Props>({
     // const {loading, onFinish} = useUpdateItem(itemDetail.id, dispatch, memberActions);
 
     return () => {
-      const {itemDetail} = props;
       return (
         <Form layout="horizontal" {...formItemLayout} ref={formRef} model={formState} onFinish={onFinish}>
-          <FormItem label="用户名" {...fromDecorators.name}>
-            <Input v-model:value={formState.name} disabled={!!itemDetail.id} allowClear placeholder="请输入" />
+          <FormItem {...fromDecorators.name}>
+            <Input v-model:value={formState.name} allowClear placeholder="请输入" />
           </FormItem>
-          <FormItem label="呢称" {...fromDecorators.nickname}>
+          <FormItem {...fromDecorators.nickname}>
             <Input v-model:value={formState.nickname} allowClear placeholder="请输入" />
           </FormItem>
-          <FormItem label="角色" {...fromDecorators.role}>
+          <FormItem {...fromDecorators.role}>
             <Select v-model:value={formState.role} allowClear placeholder="请选择" options={DRole.options} />
           </FormItem>
-          <FormItem label="性别" {...fromDecorators.gender}>
+          <FormItem {...fromDecorators.gender}>
             <Select v-model:value={formState.gender} allowClear placeholder="请选择" options={DGender.options} />
           </FormItem>
-          <FormItem label="Email" {...fromDecorators.email}>
+          <FormItem {...fromDecorators.email}>
             <Input v-model:value={formState.email} allowClear placeholder="请输入" />
           </FormItem>
-          <FormItem label="状态" {...fromDecorators.status}>
+          <FormItem {...fromDecorators.status}>
             <Select v-model:value={formState.status} allowClear placeholder="请选择" options={DStatus.options} />
           </FormItem>
           <div class="g-form-actions">

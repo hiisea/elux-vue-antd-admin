@@ -16,11 +16,25 @@ interface Props<T = Record<string, any>> {
   rowKey?: string;
   rowName?: string;
   value?: string | string[];
+  returnArray?: boolean;
   onChange?: (value?: string | string[]) => void;
 }
 
 const Component = defineComponent<Props>({
   name: styles.root,
+  props: [
+    'class',
+    'selectorPathname',
+    'showSearch',
+    'fixedSearch',
+    'limit',
+    'placeholder',
+    'rowKey',
+    'rowName',
+    'value',
+    'returnArray',
+    'onChange',
+  ] as any,
   emits: ['update:value'],
   setup(props, {emit}) {
     const formItemContext = Form.useInjectFormItemContext();
@@ -38,20 +52,21 @@ const Component = defineComponent<Props>({
       });
     });
     const removeItem = (index: number) => {
-      const {rowKey = 'id', rowName = 'name'} = props;
+      const {rowKey = 'id', rowName = 'name', returnArray} = props;
       const rows = selectedRows.value
         .slice(0, index)
         .concat(selectedRows.value.slice(index + 1))
         .map((row) => [row[rowKey], row[rowName]].join(','));
-      triggerChange(rows.length === 1 ? rows[0] : rows);
+      triggerChange(rows.length === 1 && !returnArray ? rows[0] : rows);
     };
-    const onSelectedSubmit = (rows: Record<string, any>[]) => {
-      const {rowKey = 'id', rowName = 'name'} = props;
-      const selectedItems = rows.map((item) => [item[rowKey], item[rowName]].filter(Boolean).join(','));
-      triggerChange(selectedItems);
+    const onSelectedSubmit = (selectedItems: Record<string, any>[]) => {
+      const {rowKey = 'id', rowName = 'name', returnArray} = props;
+      const rows = selectedItems.map((item) => [item[rowKey], item[rowName]].filter(Boolean).join(','));
+      triggerChange(rows.length === 1 && !returnArray ? rows[0] : rows);
     };
     const removeAll = () => {
-      triggerChange('');
+      const {returnArray} = props;
+      triggerChange(returnArray ? [] : '');
     };
     const router = useRouter();
 
