@@ -5,8 +5,6 @@ declare module '*.gif';
 declare module '*.less';
 declare module '*.scss';
 declare module '*.vue' {
-  import type {EluxComponent} from '@elux/vue-web';
-  import type {DefineComponent} from 'vue';
-  const component: DefineComponent<any> & EluxComponent;
-  export default component;
+  const Component: (props: any) => JSX.Element;
+  export default Component;
 }
