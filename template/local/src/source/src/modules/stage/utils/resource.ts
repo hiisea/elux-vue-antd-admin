@@ -111,7 +111,7 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
     await this.api.updateItem!({id, data});
     await this.getRouter().back(1, 'window');
     message.success('编辑成功！');
-    this.getRouter().back(0, 'page');
+    this.getRouter().back(0);
   }
 
   @effect()
@@ -119,7 +119,7 @@ export abstract class BaseResource<TDefineResource extends DefineResource, TStor
     await this.api.createItem!(data);
     await this.getRouter().back(1, 'window');
     message.success('创建成功！');
-    this.getRouter().back(0, 'page');
+    this.getRouter().back(0);
   }
 }
 
