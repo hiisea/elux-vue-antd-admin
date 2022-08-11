@@ -21,7 +21,9 @@ const summaryHtml = (
       的后台管理系统通用模版，主要包含运行环境、脚手架、代码风格、基本Layout、状态管理、路由管理、增删改查逻辑、列表、表单等。
     </p>
     <blockquote>
-      <p>为保持工程简单清爽，方便二次开发，不提供各种纷杂的具体业务组件，请视具体业务自行加入（网上很多）</p>
+      <p>
+        为保持工程简单清爽，方便二次开发，只提供基本版式和通用组件，不集成各种眼花缭乱的组件，需要的时候自己加进去就行了，Antd本身也自带很多组件。
+      </p>
     </blockquote>
     <h2 id="在线预览">在线预览</h2>
     <p>
@@ -75,6 +77,12 @@ const summaryHtml = (
       <li>
         如果使用 <code>npm</code> 安装依赖，npm版本 &gt;= 7.0
       </li>
+      <li>
+        本项目代码风格检查以 LF 作为换行符，如果你在windows中使用<code>git clone</code>，最好关闭<code>autocrlf</code>
+        <blockquote>
+          <p>git config --global core.autocrlf false</p>
+        </blockquote>
+      </li>
     </ul>
     <h2 id="你看得见的ui">你看得见的UI</h2>
     <ul>
@@ -86,7 +94,7 @@ const summaryHtml = (
       </li>
       <li>
         <p>
-          🚀 支持第一次后退溢出，自动回到首页，再次后退则弹出提示：您确定要离开本站？防止用户误操作。
+          🚀 支持第一次后退溢出，自动回到首页，再次后退则弹出提示：<code>您确定要离开本站？</code>防止用户误操作。{' '}
           <img src="/client/imgs/leave.jpg" alt="elux收藏夹" />
         </p>
       </li>
@@ -237,14 +245,17 @@ const summaryHtml = (
             发送给好友后，其可以通过Url还原窗口。
           </li>
           <li>
-            轻松实现keep-alive。keep-alive优点是用户体验好，缺点是太占资源（需要缓存所有Dom元素还有相关内存变量），现在使用虚拟Windw，你想keep-alive就在新窗口中打开，不想keep-alive就在原窗口中打开，关闭窗口就自动销毁keep-alive
+            实现<code>keep-alive</code>
+            。keep-alive优点是用户体验好，缺点是太占资源（需要缓存所有Dom元素还有相关内存变量），现在使用虚拟Windw，你想keep-alive就在新窗口中打开，不想keep-alive就在原窗口中打开，关闭窗口就自动销毁keep-alive
           </li>
         </ul>
       </li>
       <li>
         <p>🚀 基于抽象的增删改查逻辑：</p>
         <ul>
-          <li>业务逻辑通过类的继承复用，如果是标准的增删改查基本上不用写代码，否则可以自己覆盖父类中的某些方法：</li>
+          <li>
+            业务逻辑通过类的继承复用，如果是标准的增删改查基本上<code>不用写代码</code>，否则可以自己覆盖父类中的某些方法：
+          </li>
         </ul>
         <pre
           v-html={`<code class="language-ts">export class Model extends BaseResource&lt;MemberResource&gt; {
@@ -347,8 +358,10 @@ const summaryHtml = (
       <li>
         <p>🚀 内置最强状态管理框架(^-^)：</p>
         <ul>
-          <li>同时支持React/Vue，不再深度耦合UI框架。</li>
-          <li>最大程度简化action和store的写法</li>
+          <li>
+            同时支持<code>React/Vue</code>的状态管理框架。
+          </li>
+          <li>最大程度简化action和store的写法：</li>
         </ul>
         <pre
           v-html={`<code class="language-ts">export class Model extends BaseMode {
@@ -370,7 +383,7 @@ const summaryHtml = (
         />
         <ul>
           <li>与路由结合，支持Store多实例。</li>
-          <li>路由跳转时自动清空Store，再也不用担心State在Store中无限累积。</li>
+          <li>路由跳转时自动清理Store，再也不用担心State无限累积。</li>
           <li>为action引入线程机制，支持在处理action的过程中，在派生出新的action线程。</li>
           <li>action执行中支持异步操作：</li>
         </ul>
@@ -380,12 +393,14 @@ public async updateItem(id: string, data: UpdateItem) {
   await this.api.updateItem!({id, data}); //调用后台API
   await this.getRouter().back(1, &#39;window&#39;); //路由后退一步(到列表页)
   message.success(&#39;编辑成功！&#39;); //提示
-  this.getRouter().back(0, &#39;page&#39;); //back(0)表示刷新当前页(列表页)
+  this.getRouter().back(0); //back(0)表示刷新当前页(列表页)
 }
 </code>`}
         />
         <ul>
-          <li>支持awiat action的执行结果，如在UI中等待login这个action的执行结果：</li>
+          <li>
+            支持<code>awiat dispatch(action)</code>执行，如在UI中等待login这个action的执行结果：
+          </li>
         </ul>
         <pre
           v-html={`<code class="language-ts">const onSubmit = (values: HFormData) =&gt; {
@@ -484,39 +499,20 @@ public async fetchList(listSearchData?: TDefineResource[&#39;ListSearch&#39;]) {
       <li>
         <p>🚀 提供基于双栈单链的虚拟路由。</p>
         <ul>
-          <li>拥有2维历史记录栈，将原生路由体验带入浏览器。</li>
+          <li>拥有2维历史记录栈，相当于在SinglePage中虚拟了一个完整的浏览器，页面可以在原窗口中打开，也可以新开一个虚拟窗口打开。</li>
         </ul>
         <pre
-          v-html={`<code class="language-ts">router.push({url: &#39;/login&#39;}, &#39;page&#39;) //在当前页历史记录栈中新增一条历史记录
-router.push({url: &#39;/login&#39;}, &#39;window&#39;) //在新窗口历史记录栈中新增一条历史记录
+          v-html={`<code class="language-ts">router.push({url: &#39;/login&#39;}, &#39;page&#39;) //在原窗口中打开
+router.push({url: &#39;/login&#39;}, &#39;window&#39;) //在新窗口中打开
 </code>`}
         />
         <ul>
-          <li>基于虚拟路由，不再直接关联原生路由，中间可以转换映射。如在小程序中映射：</li>
-        </ul>
-        <pre
-          v-html={`<code class="language-ts">const NativePathnameMapping = {
-  in(nativePathname) { //将小程序路由地址映射为虚拟路由地址
-    if (nativePathname === &#39;/&#39;) {
-      nativePathname = &#39;/modules/article/pages/list&#39;;
-    }
-    const Prefix = {my: &#39;/admin&#39;};
-    return nativePathname.replace(/^\/modules\/(\w+)\/pages\//, (match, moduleName) =&gt; {
-      return (Prefix[moduleName] || &#39;&#39;)+&#39;/&#39;+moduleName+&#39;/&#39;;
-    });
-  },
-  out(internalPathname) { //将虚拟路由地址映射为小程序路由地址
-    internalPathname = internalPathname.replace(&#39;/admin/&#39;, &#39;/&#39;);
-    return internalPathname.replace(/^\/(\w+)\//, &#39;/modules/$1/pages/&#39;);
-  },
-}
-</code>`}
-        />
-        <ul>
+          <li>基于虚拟路由，不再直接关联原生路由，中间可以转换映射。</li>
           <li>跨平台，可用于浏览器、服务器SSR、小程序、原生应用。</li>
-          <li>跨框架，可用于React、Vue，不依赖其它路由框架，如react-router、vue-router</li>
-          <li>可完整保存历史快照，包括Store和Dom元素</li>
-          <li>可访问和查找历史记录，不再只是一个history.length</li>
+          <li>跨框架，可用于React、Vue。</li>
+          <li>不依赖其它路由框架，如react-router、vue-router。</li>
+          <li>可完整保存历史快照，包括Store和Dom元素。</li>
+          <li>可访问和查找历史记录，不再只是一个history.length：</li>
         </ul>
         <pre
           v-html={`<code class="language-ts">const length = router.getHistoryLength(); //获取历史栈中的记录数
@@ -541,13 +537,24 @@ public async cancelLogin(): Promise&lt;void&gt; {
 </code>`}
         />
         <ul>
-          <li>支持路由拦截和路由守卫</li>
+          <li>支持路由拦截和路由守卫：</li>
+        </ul>
+        <pre
+          v-html={`<code class="language-ts">@effect(null)
+protected async [&#39;this._testRouteChange&#39;]({url, pathname}) {
+    if (!this.state.curUser.hasLogin &amp;&amp; this.checkNeedsLogin(pathname)) {
+        throw new CustomError(CommonErrorCode.unauthorized, &#39;请登录！&#39;);
+    }
+}
+</code>`}
+        />
+        <ul>
           <li>支持后退溢出时重定向，比如防止用户后退过多，不小心退出了本站：</li>
         </ul>
         <pre
           v-html={`<code class="language-ts">@effect(null)
 protected async [&#39;this._error&#39;](error: CustomError): Promise&lt;void&gt; {
-  if (error.code === ErrorCodes.ROUTE_BACK_OVERFLOW) {
+  if (error.code === ErrorCodes.ROUTE_BACK_OVERFLOW) {//后退溢出时会抛出
     const redirect: string = HomeUrl;
     //如果已经时主页，则提示用户是否退出本站？
     if (this.getRouter().location.url === redirect &amp;&amp; window.confirm(&#39;确定要退出本站吗？&#39;)){
@@ -570,7 +577,7 @@ public async updateItem(id: string, data: UpdateItem) {
   await this.api.updateItem!({id, data});
   await this.getRouter().back(1, &#39;window&#39;); //可await路由后退
   message.success(&#39;编辑成功！&#39;);
-  this.getRouter().back(0, &#39;page&#39;); //back(0)可刷新页面
+  this.getRouter().back(0); //back(0)可刷新页面
 }
 </code>`}
         />
@@ -657,8 +664,8 @@ router.back(stepOrCallback, target) //后退或刷新
     </p>
     <p>
       所以需要重构的只是View，由于Vue3中可以使用<code>steup+tsx</code>，并且<code>antd-vue</code>与<code>antd-react</code>
-      风格和api基本保持一致，所以能2个版本的差异就更小了。Vue版全程使用tsx编写，你也可以自己改成template方式，脚手架已经内置了对.vue文件的支持。也欢迎有志之士贡献源码，将其重构为
-      <code>template版</code>，新增一个branch或fork。
+      风格和api基本保持一致，所以能2个版本的差异就更小了。Vue版全程使用tsx编写，你也可以自己改成template方式，脚手架已经内置了对.vue文件的支持。也欢迎有空的小伙伴贡献源码，将其重构为
+      <code>template</code>版。
     </p>
     <h2 id="更多相关文章">更多相关文章</h2>
     <ul>
@@ -670,6 +677,9 @@ router.back(stepOrCallback, target) //后退或刷新
       </li>
       <li>
         <a href="https://juejin.cn/post/7124959667326812196">手撸Router，还要啥Router框架？让react-router/vue-router躺一边凉快去</a>
+      </li>
+      <li>
+        <a href="https://juejin.cn/post/7129316859182710814">一种比css_scoped和css_module更优雅的避免css命名冲突小妙招</a>
       </li>
     </ul>
     <h2 id="感谢关注，欢迎参与">感谢关注，欢迎参与</h2>

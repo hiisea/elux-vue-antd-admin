@@ -32,7 +32,7 @@ const tabSlots = {
     </div>
   ),
   rightExtra: () => (
-    <Link to={0} action="back" target="page" refresh class="btn-refresh" title="刷新">
+    <Link to={0} action="back" refresh class="btn-refresh" title="刷新">
       <ReloadOutlined />
     </Link>
   ),
