@@ -1225,12 +1225,12 @@
   resolved "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@elux/app@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.npmmirror.com/@elux/app/-/app-2.6.1.tgz#7b996e81aee785941b754d85c24550305ac0eb51"
-  integrity sha512-h9Kb6Q6ZcZbAeM9bIsZS08Yew5vfXocebUus4LezvywmSUvkjrAtLMmK50ONXzPXDuDSfsDmpoVvUYVlpdXLxg==
+"@elux/app@^2.6.3":
+  version "2.6.3"
+  resolved "https://registry.npmmirror.com/@elux/app/-/app-2.6.3.tgz#6982d4cad3570966f3c6b38cd7cec6f32c034b47"
+  integrity sha512-3vBN2pHuLNfH7bBgnAXQwM7C6foACeFrfduEzmO8kaOCEQFWT+jkwPMhNXIAD3KrN3kfUTaRZp235m5SiZJl7g==
   dependencies:
-    "@elux/core" "^2.6.1"
+    "@elux/core" "^2.6.3"
 
 "@elux/babel-preset@^1.0.2":
   version "1.0.2"
@@ -1318,10 +1318,10 @@
     "@elux/cli-utils" "^2.3.1"
     commander "^7.0.0"
 
-"@elux/core@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.npmmirror.com/@elux/core/-/core-2.6.1.tgz#bd4c69398104094daa22615589532863769ddd46"
-  integrity sha512-tCfIjNaUcrNkoluCoMeTa1u64DkB0C5m+LaxktTgx50MkCDSyka3bX9o2OL51yxLWMG1ftnOq6/K9l15Mh3RwA==
+"@elux/core@^2.6.3":
+  version "2.6.3"
+  resolved "https://registry.npmmirror.com/@elux/core/-/core-2.6.3.tgz#4187751304e01281f896b5a9bfe921e41f01896b"
+  integrity sha512-4Jrb8vEx4UU4EroXQUIKJBDsuJ7t1y7/vzxs97BDW3Hh/lM/kUDU90MOIA/RhX38biV126HIJ1DqSc4zu+/H7A==
 
 "@elux/eslint-plugin@^1.2.2":
   version "1.2.2"
@@ -1342,12 +1342,12 @@
     eslint-plugin-vue "^8.0.1"
     prettier "^2.4.0"
 
-"@elux/route-browser@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.npmmirror.com/@elux/route-browser/-/route-browser-2.6.1.tgz#798f5242ac338a67f3699fe1f0a1418601abefa2"
-  integrity sha512-jYaVUdxhoqbcTVF0xHxRMg+aJYyAsj6ZEmJhGvwpqe+4oDHO+z3qcpbsnRd3k0RxQM8ww0FXER78aDcd6ajylw==
+"@elux/route-browser@^2.6.3":
+  version "2.6.3"
+  resolved "https://registry.npmmirror.com/@elux/route-browser/-/route-browser-2.6.3.tgz#a95b6849bb809504144efe6e37a7b19a6969c9c4"
+  integrity sha512-5ILyjuL2cmZCo8zelOCelhqi3sDI8QqXYrLW2v6dBRJhM2HdWk2U1Nf3j+bFy3RG6JFw03VoVUotFUAq4xhluQ==
   dependencies:
-    "@elux/core" "^2.6.1"
+    "@elux/core" "^2.6.3"
 
 "@elux/stylelint-config@^1.1.1":
   version "1.1.1"
@@ -1367,22 +1367,22 @@
     stylelint-order "^5.0.0"
     stylelint-prettier "^1.2.0"
 
-"@elux/vue-components@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.npmmirror.com/@elux/vue-components/-/vue-components-2.6.1.tgz#f093fb7cc6b33af7276c1ac4be909afa830302b1"
-  integrity sha512-fNjWGjpugfrqNdyX5ywFln4T8aS9/3ap/G65cYce2RzqnySnyo2Zt75SDOS4wX3e6ZlttNYWAhu/vULlNnIQCQ==
+"@elux/vue-components@^2.6.3":
+  version "2.6.3"
+  resolved "https://registry.npmmirror.com/@elux/vue-components/-/vue-components-2.6.3.tgz#37ce066503f78da9bed0ee6201efd57860fbb387"
+  integrity sha512-ZxovjGy/9BoGD0+X9C46ct2vpMcBup8Uzb1Ioj4s0O4Iid9ztD0gdsgOmFo6pzD+ulH09roWwjfvjCGuwVVhaQ==
   dependencies:
-    "@elux/core" "^2.6.1"
+    "@elux/core" "^2.6.3"
 
-"@elux/vue-web@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.npmmirror.com/@elux/vue-web/-/vue-web-2.6.1.tgz#75af7802c6977a40a04e00553b200bcc1911e50f"
-  integrity sha512-wGLVDduxtxDRgPp+exyLsuRlbgutAmMQLYSmOFPXGiwHS7MoC3ssvcnqPnQqiyFuQfQFmNgresv2M0mHL8rHyw==
+"@elux/vue-web@^2.6.3":
+  version "2.6.3"
+  resolved "https://registry.npmmirror.com/@elux/vue-web/-/vue-web-2.6.3.tgz#a017bff060e43fbd99b821a5f55096331755625e"
+  integrity sha512-EhH/c6KmIIF9X5f9HHb364YUbpirxgblYdqQ0qSrN2SK+hWc8svz/G6vLFwSeh7iB8zghH7wjtkbLjjNVlNPxg==
   dependencies:
-    "@elux/app" "^2.6.1"
-    "@elux/core" "^2.6.1"
-    "@elux/route-browser" "^2.6.1"
-    "@elux/vue-components" "^2.6.1"
+    "@elux/app" "^2.6.3"
+    "@elux/core" "^2.6.3"
+    "@elux/route-browser" "^2.6.3"
+    "@elux/vue-components" "^2.6.3"
     "@vue/server-renderer" "^3.0.0"
 
 "@eslint/eslintrc@^1.3.0":
